@@ -1,0 +1,111 @@
+<aside
+  class="fixed top-0 left-0 flex-col w-64 h-full text-gray-100 bg-gray-800 shadow-xl z-30 md:relative md:translate-x-0 transition-transform duration-300 ease-in-out"
+  [ngClass]="isOpen ? 'translate-x-0' : '-translate-x-full'"
+>
+  <div class="p-5 text-xl font-bold border-b border-gray-700">
+    <a routerLink="/dashboard" (click)="onLinkClicked()">OutReachHub Admin</a>
+  </div>
+
+  <!-- Navigation Links -->
+  <nav class="flex-grow p-2">
+    <ul>
+      <!-- Dashboard Nav Link -->
+      <li>
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="bg-indigo-600"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="onLinkClicked()"
+          class="flex items-center p-3 my-1 space-x-3 rounded-md hover:bg-indigo-700 transition-colors duration-200"
+        >
+          <span>Dashboard</span>
+        </a>
+      </li>
+
+      <!-- Workspace Nav Link -->
+      <li>
+        <!-- Main button to toggle the dropdown -->
+        <button
+          (click)="toggleWorkspaceMenu()"
+          class="flex items-center justify-between w-full p-3 my-1 rounded-md hover:bg-indigo-700 transition-colors duration-200 focus:outline-none"
+        >
+          <!-- Workspace Icon (Briefcase) -->
+          <div class="flex items-center space-x-3">
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              ></path>
+            </svg>
+            <span>Workspace</span>
+          </div>
+
+          <!-- Chevron icon for dropdown indicator -->
+          <svg
+            class="w-5 h-5 transition-transform duration-300"
+            [ngClass]="{ 'rotate-180': isWorkspaceMenuOpen }"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            ></path>
+          </svg>
+        </button>
+
+        <!-- Sub-menu container with smooth transition -->
+        <div
+          class="overflow-hidden transition-all duration-300 ease-in-out"
+          [ngClass]="isWorkspaceMenuOpen ? 'max-h-40' : 'max-h-0'"
+        >
+          <ul class="pt-1 pl-6 space-y-1">
+            <li>
+              <a
+                routerLink="/workspace/my"
+                routerLinkActive="text-indigo-300"
+                (click)="onLinkClicked()"
+                class="block p-2 rounded-md hover:bg-gray-700 transition-colors duration-200"
+              >
+                My Workspace
+              </a>
+            </li>
+
+            <li>
+              <a
+                routerLink="/workspace/all"
+                routerLinkActive="text-indigo-300"
+                (click)="onLinkClicked()"
+                class="block p-2 rounded-md hover:bg-gray-700 transition-colors duration-200"
+              >
+                All Workspace
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <!-- Settings Nav Link -->
+      <li>
+        <a
+          routerLink="/settings"
+          routerLinkActive="bg-indigo-600"
+          (click)="onLinkClicked()"
+          class="flex items-center p-3 my-1 space-x-3 rounded-md hover:bg-indigo-700 transition-colors duration-200"
+        >
+          <span>Settings</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
