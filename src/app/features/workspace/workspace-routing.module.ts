@@ -7,7 +7,11 @@ import { WorkspaceDetailComponent } from './pages/workspace-detail/workspace-det
 const routes: Routes = [
   {
     // The main page at '/workspace' will show the list
-    path: '',
+    path: 'my',
+    component: WorkspaceListComponent,
+  },
+  {
+    path: 'all',
     component: WorkspaceListComponent,
   },
   {
@@ -24,6 +28,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class WorkspaceRoutingModule { }
+export class WorkspaceRoutingModule {}

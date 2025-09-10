@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Workspace } from '../../../../core/models/workspace.model';
 import { WorkspaceService } from '../../workspace.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-workspace-list',
@@ -12,6 +13,8 @@ export class WorkspaceListComponent implements OnInit {
   isLoading = true;
   error: string | null = null;
 
+  viewMode: 'my' | 'all' = 'my';
+
   // Pagination state
   currentPage = 1;
   totalPages = 0;
@@ -20,32 +23,53 @@ export class WorkspaceListComponent implements OnInit {
 
   sortOrder = 'asc'; // Default sort order
 
-  constructor(private workspaceService: WorkspaceService) {}
+  constructor(
+    private workspaceService: WorkspaceService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.fetchWorkspaces(this.currentPage);
+    // Subscribe to URL changes to switch between 'my' and 'all' views
+    this.route.url.subscribe((urlSegments) => {
+      // urlSegments[0].path will be 'my' or 'all'
+      this.viewMode = urlSegments[0]?.path === 'all' ? 'all' : 'my';
+      this.fetchWorkspaces(1); // Fetch the first page of the new view
+    });
   }
 
   fetchWorkspaces(page: number): void {
     this.isLoading = true;
     this.error = null;
-    // Pass the current sortOrder to the service
-    this.workspaceService
-      .getWorkspaces(page, this.limit, this.sortOrder)
-      .subscribe({
-        next: (response) => {
-          this.workspaces = response.data;
-          this.currentPage = response.page;
-          this.totalPages = response.totalPages;
-          this.totalItems = response.total;
-          this.isLoading = false;
-        },
-        error: (err) => {
-          this.error = 'Failed to load workspaces. Please try again later.';
-          this.isLoading = false;
-          console.error(err);
-        },
-      });
+
+    // THE CHANGE: Choose which service method to call based on the viewMode
+    const request$ =
+      this.viewMode === 'my'
+        ? this.workspaceService.getMyWorkspaces(
+            page,
+            this.limit,
+            this.sortOrder
+          )
+        : this.workspaceService.getAllWorkspaces(
+            page,
+            this.limit,
+            this.sortOrder
+          );
+
+    request$.subscribe({
+      next: (response) => {
+        console.log(response);
+        this.workspaces = response.data;
+        this.currentPage = response.page;
+        this.totalPages = response.totalPages;
+        this.totalItems = response.total;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load workspaces. Please try again later.';
+        this.isLoading = false;
+        console.error(err);
+      },
+    });
   }
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {

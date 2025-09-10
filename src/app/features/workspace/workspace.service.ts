@@ -19,7 +19,23 @@ export class WorkspaceService {
   private apiUrl = `${environment.apiUrl}/workspace`;
 
   constructor(private http: HttpClient) {}
-  getWorkspaces(
+  getMyWorkspaces(
+    page: number,
+    limit: number,
+    order: string
+  ): Observable<PaginatedResponse<Workspace>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString())
+      .set('order', order);
+
+    const data = this.http.get<PaginatedResponse<Workspace>>(`${this.apiUrl}/my`, {
+      params,
+    });
+    console.log(data.subscribe((res) => res));
+    return data;
+  }
+  getAllWorkspaces(
     page: number,
     limit: number,
     order: string
@@ -33,8 +49,11 @@ export class WorkspaceService {
     if (order) {
       params = params.set('order', order);
     }
-
-    return this.http.get<PaginatedResponse<Workspace>>(this.apiUrl, { params });
+    console.log('Fetching all workspaces with params:', params.toString());
+    console.log(`GET ${this.apiUrl}/all?${params.toString()}`);
+    return this.http.get<PaginatedResponse<Workspace>>(`${this.apiUrl}/all`, {
+      params,
+    });
   }
 
   createWorkspace(data: {

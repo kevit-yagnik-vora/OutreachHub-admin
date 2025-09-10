@@ -52,7 +52,7 @@ export class CreateWorkspaceComponent implements OnInit {
       next: (response) => {
         console.log('Workspace created successfully!', response);
         // On success, navigate back to the workspace list
-        this.router.navigate(['/workspace']);
+        this.router.navigate(['/workspace/my']);
       },
       error: (err) => {
         this.error = 'Failed to create workspace. Please try again.';
