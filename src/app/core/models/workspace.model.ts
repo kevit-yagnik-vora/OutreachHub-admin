@@ -2,6 +2,7 @@ export interface WorkspaceOwner {
   _id: string;
   name: string;
   email: string;
+  role?: 'Editor' | 'Viewer' | 'N/A';
 }
 
 export interface Workspace {

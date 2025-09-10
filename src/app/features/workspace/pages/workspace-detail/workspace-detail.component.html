@@ -1,35 +1,111 @@
 <!-- NEW: Notification Area at the top -->
 <div class="fixed top-24 right-6 z-50 space-y-3">
-  <div *ngFor="let n of notifications" 
-       [ngClass]="n.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'"
-       class="flex items-center px-4 py-3 text-white rounded-lg shadow-lg">
-    <svg *ngIf="n.type === 'success'" class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-    <svg *ngIf="n.type === 'error'" class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+  <div
+    *ngFor="let n of notifications"
+    [ngClass]="n.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'"
+    class="flex items-center px-4 py-3 text-white rounded-lg shadow-lg"
+  >
+    <svg
+      *ngIf="n.type === 'success'"
+      class="w-6 h-6 mr-2"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+      ></path>
+    </svg>
+    <svg
+      *ngIf="n.type === 'error'"
+      class="w-6 h-6 mr-2"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+      ></path>
+    </svg>
     <span>{{ n.message }}</span>
   </div>
 </div>
 
 <!-- Loading Spinner -->
 <div *ngIf="isLoading" class="flex items-center justify-center py-20">
-  <div class="w-10 h-10 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
+  <div
+    class="w-10 h-10 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"
+  ></div>
 </div>
 
 <!-- Error Message -->
 <div *ngIf="error" class="p-4 text-center text-red-700 bg-red-100 rounded-lg">
   <p>{{ error }}</p>
-  <a routerLink="/workspace" class="mt-2 text-sm font-medium text-indigo-600 hover:underline">← Go back to workspaces</a>
+  <a
+    routerLink="/workspace"
+    class="mt-2 text-sm font-medium text-indigo-600 hover:underline"
+    >← Go back to workspaces</a
+  >
 </div>
 
 <!-- Main Content -->
 <div *ngIf="!isLoading && !error && workspace" class="space-y-6">
   <!-- Header -->
-  <div>
-    <a routerLink="/workspace" class="inline-flex items-center mb-2 space-x-1 text-sm font-medium text-slate-500 hover:text-indigo-600">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-      <span>All Workspaces</span>
-    </a>
-    <h1 class="text-3xl font-bold text-slate-800">{{ workspace.name }}</h1>
-    <p class="mt-1 text-slate-500">Created by {{ workspace.createdBy.name }} on {{ workspace.createdAt | date:'longDate' }}</p>
+  <div
+    class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center"
+  >
+    <div>
+      <a
+        routerLink="/workspace"
+        class="inline-flex items-center mb-2 space-x-1 text-sm font-medium text-slate-500 hover:text-indigo-600"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          ></path>
+        </svg>
+        <span>All Workspaces</span>
+      </a>
+      <h1 class="text-3xl font-bold text-slate-800">{{ workspace.name }}</h1>
+      <p class="mt-1 text-slate-500">
+        Created by {{ workspace.createdBy.name }} on
+        {{ workspace.createdAt | date : "longDate" }}
+      </p>
+    </div>
+    <!-- THE CHANGE: The "Edit" button is now a standard button that opens the modal -->
+    <button
+      (click)="isEditModalVisible = true"
+      class="inline-flex items-center justify-center px-4 py-2 space-x-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg shadow-sm hover:bg-indigo-700"
+    >
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536L16.732 3.732z"
+        ></path>
+      </svg>
+      <span>Edit Workspace</span>
+    </button>
   </div>
 
   <!-- Main Grid -->
@@ -40,7 +116,9 @@
       <dl class="mt-4 space-y-4 text-sm">
         <div>
           <dt class="font-medium text-slate-500">Description</dt>
-          <dd class="mt-1 text-slate-700">{{ workspace.description || 'No description provided.' }}</dd>
+          <dd class="mt-1 text-slate-700">
+            {{ workspace.description || "No description provided." }}
+          </dd>
         </div>
         <div class="pt-4 border-t border-slate-100">
           <dt class="font-medium text-slate-500">Workspace ID</dt>
@@ -48,24 +126,103 @@
         </div>
         <div class="pt-4 border-t border-slate-100">
           <dt class="font-medium text-slate-500">Last Updated</dt>
-          <dd class="mt-1 text-slate-700">{{ workspace.updatedAt | date:'full' }}</dd>
+          <dd class="mt-1 text-slate-700">
+            {{ workspace.updatedAt | date : "fullDate" }}
+            {{ workspace.updatedAt | date : "shortTime" }}
+          </dd>
+        </div>
+        <div class="pt-4 border-t border-slate-100">
+          <dt class="font-medium text-slate-500">Created</dt>
+          <dd class="mt-1 text-slate-700">
+            {{ workspace.createdAt | date : "fullDate" }}
+            {{ workspace.createdAt | date : "shortTime" }}
+          </dd>
         </div>
       </dl>
     </div>
 
     <!-- Right Column: Team Members -->
     <div class="p-6 bg-white rounded-xl shadow-md">
-      
-      <h2 class="text-lg font-semibold text-slate-800">Team Members ({{ users.length }})</h2>
-      <button (click)="isAddUserModalVisible = true" class="px-3 py-1 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
-        + Add User
-      </button>
+      <div class="flex justify-between">
+        <h2 class="text-lg font-semibold text-slate-800">
+          Team Members ({{ users.length }})
+        </h2>
+        <button
+          (click)="isAddUserModalVisible = true"
+          class="px-3 py-1 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
+        >
+          + Add User
+        </button>
+      </div>
       <div class="mt-4 space-y-4">
         <div *ngFor="let user of users" class="flex items-center">
-          <img class="w-10 h-10 rounded-full" [src]="'https://placehold.co/40x40/E2E8F0/475569?text=' + user.name.charAt(0)" [alt]="user.name">
+          <img
+            class="w-10 h-10 rounded-full"
+            [src]="
+              'https://placehold.co/40x40/E2E8F0/475569?text=' +
+              user.name.charAt(0)
+            "
+            [alt]="user.name"
+          />
           <div class="flex-1 min-w-0 ml-3">
             <p class="font-semibold text-slate-800 truncate">{{ user.name }}</p>
             <p class="text-sm text-slate-500 truncate">{{ user.email }}</p>
+          </div>
+          <!-- <button
+            (click)="openConfirmRemoveModal(user)"
+            class="ml-2 text-sm font-medium text-red-500 hover:text-red-700"
+          >
+            Remove
+          </button> -->
+          <div class="flex items-center space-x-2 ml-2">
+            <span
+              class="px-2 py-1 text-xs font-medium rounded-full"
+              [ngClass]="
+                user.role === 'Editor'
+                  ? 'bg-indigo-100 text-indigo-800'
+                  : 'bg-slate-100 text-slate-800'
+              "
+            >
+              {{ user.role }}
+            </span>
+            <button
+              (click)="openChangeRoleModal(user)"
+              class="p-1 text-slate-400 hover:text-indigo-600 rounded-full focus:outline-none"
+              title="Change Role"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536L16.732 3.732z"
+                ></path>
+              </svg>
+            </button>
+            <button
+              (click)="openConfirmRemoveModal(user)"
+              class="p-1 text-slate-400 hover:text-red-600 rounded-full focus:outline-none"
+              title="Remove User"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                ></path>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -78,5 +235,39 @@
   *ngIf="isAddUserModalVisible"
   [workspaceId]="workspace!._id"
   (closeModal)="isAddUserModalVisible = false"
-  (notification)="handleUserAdded($event)">
+  (notification)="handleUserAdded($event)"
+>
 </app-add-user-modal>
+
+<app-edit-workspace-modal
+  *ngIf="isEditModalVisible"
+  [workspace]="workspace!"
+  (closeModal)="isEditModalVisible = false"
+  (notification)="handleNotification($event)"
+>
+</app-edit-workspace-modal>
+
+<!-- NEW: Add the Confirmation Modal -->
+<app-confirmation-modal
+  *ngIf="isConfirmRemoveModalVisible"
+  title="Remove User"
+  [message]="
+    'Are you sure you want to remove ' +
+    userToRemove?.name +
+    ' from this workspace?'
+  "
+  confirmText="Yes, Remove"
+  (closeModal)="isConfirmRemoveModalVisible = false"
+  (confirm)="handleRemoveUserConfirm()"
+>
+</app-confirmation-modal>
+
+<!-- NEW: Add the Change Role Modal -->
+<app-change-role-modal
+  *ngIf="isChangeRoleModalVisible"
+  [workspaceId]="workspace!._id"
+  [user]="userToManage!"
+  (closeModal)="isChangeRoleModalVisible = false; userToManage = null"
+  (notification)="handleNotification($event)"
+>
+</app-change-role-modal>

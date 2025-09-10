@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -10,6 +10,7 @@ import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component'
 import { SidebarComponent } from './layout/partials/sidebar/sidebar.component';
 import { FooterComponent } from './layout/partials/footer/footer.component';
 import { LayoutModule } from './layout/layout.module';
+import { ConfirmationModalComponent } from './shared/components/confirmation-modal/confirmation-modal.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { LayoutModule } from './layout/layout.module';
       useClass: AuthInterceptor,
       multi: true,
     },
+    { provide: LOCALE_ID, useValue: 'en-IN' },
   ],
   bootstrap: [AppComponent],
 })

@@ -55,4 +55,28 @@ export class WorkspaceService {
   getWorkspaceById(id: string): Observable<WorkspaceDetailResponse> {
     return this.http.get<WorkspaceDetailResponse>(`${this.apiUrl}/${id}`);
   }
+
+  updateWorkspace(
+    id: string,
+    data: { name?: string; description?: string }
+  ): Observable<Workspace> {
+    return this.http.put<Workspace>(`${this.apiUrl}/${id}`, data);
+  }
+
+  removeUserFromWorkspace(
+    workspaceId: string,
+    userId: string
+  ): Observable<any> {
+    const url = `${this.apiUrl}/${workspaceId}/users/${userId}`;
+    return this.http.delete(url);
+  }
+
+  updateUserRole(
+    workspaceId: string,
+    userId: string,
+    role: string
+  ): Observable<any> {
+    const url = `${this.apiUrl}/${workspaceId}/users/${userId}`;
+    return this.http.patch(url, { role });
+  }
 }

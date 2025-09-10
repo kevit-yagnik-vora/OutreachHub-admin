@@ -23,6 +23,13 @@ export class WorkspaceDetailComponent {
   isAddUserModalVisible = false;
   notifications: Array<{ message: string; type: 'success' | 'error' }> = [];
 
+  isEditModalVisible = false;
+  isConfirmRemoveModalVisible = false;
+  isChangeRoleModalVisible = false; // <-- New state for the new modal
+  userToManage: WorkspaceOwner | null = null; // A generic property to hold the user being acted upon
+
+  userToRemove: WorkspaceOwner | null = null; // Store user to be removed
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -75,6 +82,9 @@ export class WorkspaceDetailComponent {
     type: 'success' | 'error';
   }): void {
     this.isAddUserModalVisible = false;
+    this.isEditModalVisible = false;
+    this.isChangeRoleModalVisible = false; // <-- Close the new modal
+
     this.addNotification(notification.message, notification.type);
     if (this.workspace) {
       this.fetchWorkspaceDetails(this.workspace._id);
@@ -87,6 +97,57 @@ export class WorkspaceDetailComponent {
     // Automatically remove the notification after 5 seconds
     setTimeout(() => {
       this.notifications.shift();
-    }, 5000);
+    }, 2000);
+  }
+
+  openChangeRoleModal(user: WorkspaceOwner): void {
+    this.userToManage = user;
+    this.isChangeRoleModalVisible = true;
+  }
+
+  // Open the confirmation modal and store the user
+  openConfirmRemoveModal(user: WorkspaceOwner): void {
+    this.userToRemove = user;
+    this.userToManage = user;
+    this.isConfirmRemoveModalVisible = true;
+  }
+
+  handleRemoveUserConfirm(): void {
+    // if (!this.userToRemove || !this.workspace) {
+    //   return;
+    // }
+
+    // this.workspaceService
+    //   .removeUserFromWorkspace(this.workspace._id, this.userToRemove._id)
+    //   .subscribe({
+    //     next: () => {
+    //       this.addNotification(
+    //         `Successfully removed ${this.userToRemove?.name}.`,
+    //         'success'
+    //       );
+    //       this.fetchWorkspaceDetails(this.workspace!._id); // Refresh data
+    //     },
+    //     error: (err) => {
+    //       this.addNotification('Failed to remove user.', 'error');
+    //       console.error(err);
+    //     },
+    //     complete: () => {
+    //       // Close modal and clear selected user regardless of outcome
+    //       this.isConfirmRemoveModalVisible = false;
+    //       this.userToRemove = null;
+    //     },
+    //   });
+
+    if (!this.userToManage || !this.workspace) return;
+    // Use this.userToManage instead of this.userToRemove
+    this.workspaceService
+      .removeUserFromWorkspace(this.workspace._id, this.userToManage._id)
+      .subscribe({
+        // ...
+        complete: () => {
+          this.isConfirmRemoveModalVisible = false;
+          this.userToManage = null; // Clear the selected user
+        },
+      });
   }
 }
