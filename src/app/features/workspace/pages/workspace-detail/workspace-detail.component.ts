@@ -143,7 +143,17 @@ export class WorkspaceDetailComponent {
     this.workspaceService
       .removeUserFromWorkspace(this.workspace._id, this.userToManage._id)
       .subscribe({
-        // ...
+        next: () => {
+          this.addNotification(
+            `Successfully removed ${this.userToRemove?.name}.`,
+            'success'
+          );
+          this.fetchWorkspaceDetails(this.workspace!._id); // Refresh data
+        },
+        error: (err) => {
+          this.addNotification('Failed to remove user.', 'error');
+          console.error(err);
+        },
         complete: () => {
           this.isConfirmRemoveModalVisible = false;
           this.userToManage = null; // Clear the selected user
