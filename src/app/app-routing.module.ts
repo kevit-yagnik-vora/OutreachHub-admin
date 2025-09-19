@@ -30,12 +30,18 @@ const routes: Routes = [
             (m) => m.DashboardModule
           ),
       },
+      {
+        path: 'workspace',
+        loadChildren: () =>
+          import('./features/workspace/workspace.module').then(
+            (m) => m.WorkspaceModule
+          ),
+      },
 
       // Default route for authenticated users
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
-  { path: 'workspace', loadChildren: () => import('./features/workspace/workspace.module').then(m => m.WorkspaceModule) },
 ];
 
 @NgModule({

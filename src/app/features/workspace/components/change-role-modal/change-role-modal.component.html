@@ -1,0 +1,30 @@
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-40 bg-black bg-opacity-50" (click)="closeModal.emit()"></div>
+
+<!-- Modal Content -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl">
+    <h3 class="text-lg font-semibold text-slate-800">Change User Role</h3>
+    <p class="mt-2 text-sm text-slate-500">
+      Select a new role for <strong class="text-slate-700">{{ user.name }}</strong> in this workspace.
+    </p>
+    
+    <div class="mt-4">
+      <label for="role" class="block text-sm font-medium text-slate-700">New Role</label>
+      <select [(ngModel)]="selectedRole" id="role" 
+              class="block w-full px-3 py-2 mt-1 bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+        <option value="Viewer">Viewer</option>
+        <option value="Editor">Editor</option>
+      </select>
+    </div>
+    
+    <div class="flex justify-end mt-6 space-x-3">
+      <button type="button" (click)="closeModal.emit()" class="px-4 py-2 text-sm font-medium bg-slate-100 rounded-md hover:bg-slate-200">Cancel</button>
+      <button type="button" (click)="onConfirm()" [disabled]="isSubmitting"
+              class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-indigo-400">
+        <span *ngIf="isSubmitting" class="w-4 h-4 mr-2 border-2 border-white rounded-full border-t-transparent animate-spin"></span>
+        {{ isSubmitting ? 'Saving...' : 'Confirm Change' }}
+      </button>
+    </div>
+  </div>
+</div>

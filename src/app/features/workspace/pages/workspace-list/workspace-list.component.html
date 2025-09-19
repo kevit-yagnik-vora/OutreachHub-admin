@@ -1,0 +1,177 @@
+<div class="space-y-6">
+  <!-- Header Section with Dynamic Title and Conditional Buttons -->
+  <div
+    class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center"
+  >
+    <div>
+      <h1 class="text-3xl font-bold text-slate-800">
+        {{ viewMode === "my" ? "My Workspaces" : "All Workspaces" }}
+      </h1>
+      <p class="mt-1 text-slate-500">
+        {{
+          viewMode === "my"
+            ? "Manage, view, and create your team workspaces."
+            : "A read-only view of all workspaces in the system."
+        }}
+      </p>
+    </div>
+    <div *ngIf="viewMode === 'my'" class="flex items-center space-x-2">
+      <select
+        (change)="onSortChange($event)"
+        class="block w-full py-2 pl-3 pr-10 text-sm border-slate-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+      >
+        <option value="asc">Name (A-Z)</option>
+        <option value="desc">Name (Z-A)</option>
+      </select>
+      <a
+        routerLink="/workspace/create"
+        class="inline-flex items-center justify-center px-4 py-2 space-x-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg shadow-sm hover:bg-indigo-700"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+          ></path>
+        </svg>
+        <span>Create</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex items-center justify-center py-20">
+    <div
+      class="w-10 h-10 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"
+    ></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="p-4 text-center text-red-700 bg-red-100 rounded-lg">
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Main Content Area: Displays either the Empty State or the Workspace Grid -->
+  <div *ngIf="!isLoading && !error">
+    <!-- Empty State: Shown when there are no workspaces to display -->
+    <div
+      *ngIf="workspaces.length === 0"
+      class="py-20 text-center border-2 border-dashed rounded-lg border-slate-300"
+    >
+      <svg
+        class="w-12 h-12 mx-auto text-slate-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+        ></path>
+      </svg>
+      <h3 class="mt-2 text-sm font-semibold text-slate-900">
+        No workspaces found
+      </h3>
+      <p class="mt-1 text-sm text-slate-500">
+        {{
+          viewMode === "my"
+            ? "Get started by creating a new workspace."
+            : "There are no workspaces to display."
+        }}
+      </p>
+      <div *ngIf="viewMode === 'my'" class="mt-6">
+        <a
+          routerLink="/workspace/create"
+          class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700"
+        >
+          + Create Workspace
+        </a>
+      </div>
+    </div>
+
+    <!-- Data State: Shown when there are one or more workspaces -->
+    <div *ngIf="workspaces.length > 0">
+      <!-- Workspace Cards Grid -->
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          *ngFor="let ws of workspaces"
+          class="flex flex-col justify-between p-6 bg-white rounded-xl shadow-md transition-shadow duration-200 hover:shadow-lg"
+        >
+          <div>
+            <h2 class="text-xl font-bold text-slate-800 truncate">
+              {{ ws.name }}
+            </h2>
+            <p class="mt-1 text-sm text-slate-500">
+              Owned by:
+              <span class="font-medium text-slate-600">{{
+                ws.createdBy.name
+              }}</span>
+            </p>
+            <p
+              class="mt-4 text-sm text-slate-600 h-10 overflow-hidden text-ellipsis"
+            >
+              {{ ws.description || "No description provided." }}
+            </p>
+          </div>
+          <div
+            class="flex items-center justify-between mt-6 pt-4 border-t border-slate-100"
+          >
+            <p class="text-xs text-slate-400">
+              Updated: {{ ws.updatedAt | date : "mediumDate" }}
+            </p>
+            <a
+              *ngIf="viewMode === 'my'"
+              [routerLink]="['/workspace', ws._id]"
+              class="px-3 py-1.5 text-sm font-semibold text-indigo-600 bg-indigo-100 rounded-full hover:bg-indigo-200"
+              >View</a
+            >
+          </div>
+        </div>
+      </div>
+      <!-- Pagination Controls -->
+      <div
+        *ngIf="totalPages > 1"
+        class="flex items-center justify-between pt-6 mt-6 border-t border-slate-200"
+      >
+        <p class="text-sm text-slate-500">
+          Showing
+          <span class="font-medium">{{ (currentPage - 1) * limit + 1 }}</span>
+          to
+          <span class="font-medium">{{
+            (currentPage - 1) * limit + workspaces.length
+          }}</span>
+          of <span class="font-medium">{{ totalItems }}</span> results
+        </p>
+        <nav class="inline-flex items-center -space-x-px rounded-md shadow-sm">
+          <button
+            (click)="goToPage(currentPage - 1)"
+            [disabled]="currentPage === 1"
+            class="relative inline-flex items-center px-3 py-2 text-sm font-medium text-slate-500 bg-white border border-slate-300 rounded-l-md hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Previous
+          </button>
+          <span
+            class="relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold text-indigo-600 bg-indigo-50 border border-indigo-500"
+          >
+            Page {{ currentPage }}
+          </span>
+          <button
+            (click)="goToPage(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+            class="relative inline-flex items-center px-3 py-2 text-sm font-medium text-slate-500 bg-white border border-slate-300 rounded-r-md hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
