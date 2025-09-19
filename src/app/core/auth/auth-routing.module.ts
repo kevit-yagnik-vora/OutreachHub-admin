@@ -8,7 +8,6 @@ const routes: Routes = [
     component: LoginComponent,
   },
   {
-    // Redirects '/auth' to '/auth/login'
     path: '',
     redirectTo: 'login',
     pathMatch: 'full',

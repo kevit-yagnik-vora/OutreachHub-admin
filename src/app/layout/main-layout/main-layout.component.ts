@@ -11,7 +11,7 @@ import { AuthService } from '../../core/services/auth.service';
 export class MainLayoutComponent {
   isLoggedIn$: Observable<boolean>;
   currentUser$: Observable<User | null>;
-  isSidebarVisible = false; // <-- ADD THIS: State for mobile sidebar visibility
+  isSidebarVisible = false;
 
   constructor(private authService: AuthService) {
     this.isLoggedIn$ = this.authService.isLoggedIn$;
@@ -22,7 +22,6 @@ export class MainLayoutComponent {
     this.authService.logout();
   }
 
-  // <-- ADD THIS: Method to toggle the sidebar state
   toggleSidebar(): void {
     this.isSidebarVisible = !this.isSidebarVisible;
   }

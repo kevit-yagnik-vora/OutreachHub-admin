@@ -15,7 +15,6 @@ import { TokenService } from './token.service';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 
-// API Response Interfaces
 interface LoginResponse {
   access_token: string;
   refresh_token: string;
@@ -43,7 +42,6 @@ export class AuthService {
     private router: Router
   ) {}
 
-  // --- Public Observables for Components ---
   get isLoggedIn$(): Observable<boolean> {
     return this.loggedIn.asObservable();
   }
@@ -57,17 +55,12 @@ export class AuthService {
       .post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials)
       .pipe(
         switchMap((response: LoginResponse) => {
-          // Save tokens
           this.tokenService.saveTokens(
             response.access_token,
             response.refresh_token
           );
-
-          // Decode token
           const decoded: any = jwtDecode(response.access_token);
-          const userId = decoded?.userId; // <-- backend must embed this
-
-          // Call Nest API to get user
+          const userId = decoded?.userId;
           return this.http.get<User>(`${this.apiUrl}/user/${userId}`);
         }),
         tap((user: User) => {
@@ -98,39 +91,33 @@ export class AuthService {
       .post<RefreshResponse>(`${this.apiUrl}/auth/refresh`, { refresh_token })
       .pipe(
         switchMap((response) => {
-          // Save new token
           this.tokenService.saveTokens(response.access_token, refresh_token);
 
-          // Decode token → extract userId
           const decoded: any = jwtDecode(response.access_token);
           const userId = decoded?.userId;
-
-          // Fetch user by id
           return this.http.get<User>(`${this.apiUrl}/user/${userId}`).pipe(
             tap((user) => {
               this.tokenService.saveUser(user);
               this.currentUser.next(user);
               this.loggedIn.next(true);
             }),
-            map(() => ({ access_token: response.access_token })) // ✅ return token as expected
+            map(() => ({ access_token: response.access_token }))
           );
         })
       );
   }
 
-  // --- Profile & Token Helper ---
   isTokenExpired(token: string): boolean {
     try {
       const decoded: { exp: number } = jwtDecode(token);
       const expiry = decoded.exp * 1000;
       return Date.now() > expiry;
     } catch (e) {
-      return true; // If token is malformed, treat as expired
+      return true;
     }
   }
 
   private handleError(error: HttpErrorResponse) {
-    // Generic error handling
     let errorMessage = 'An unknown error occurred!';
     if (error.status === 401) {
       errorMessage = 'Invalid credentials or session expired.';

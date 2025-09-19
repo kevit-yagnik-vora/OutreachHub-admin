@@ -9,11 +9,9 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./change-role-modal.component.scss'],
 })
 export class ChangeRoleModalComponent implements OnInit {
-  // Receive the full user and workspace ID from the parent component
   @Input() user!: WorkspaceOwner;
   @Input() workspaceId!: string;
 
-  // Emit events back to the parent
   @Output() closeModal = new EventEmitter<void>();
   @Output() notification = new EventEmitter<{
     message: string;
@@ -24,12 +22,10 @@ export class ChangeRoleModalComponent implements OnInit {
   isSubmitting = false;
 
   constructor(private workspaceService: WorkspaceService) {
-    // Initialize with a default value
     this.selectedRole = 'Viewer';
   }
 
   ngOnInit(): void {
-    // Set the initial dropdown value to the user's current role
     if (this.user && this.user.role) {
       this.selectedRole = this.user.role as 'Editor' | 'Viewer';
     }
@@ -53,7 +49,6 @@ export class ChangeRoleModalComponent implements OnInit {
           });
           this.closeModal.emit();
         },
-        // THE FIX: Add the HttpErrorResponse type to the 'err' parameter
         error: (err: HttpErrorResponse) => {
           this.notification.emit({
             message:

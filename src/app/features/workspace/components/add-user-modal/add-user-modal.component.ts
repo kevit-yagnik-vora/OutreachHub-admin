@@ -32,7 +32,7 @@ export class AddUserModalComponent implements OnInit {
     this.addUserForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       role: ['Viewer', [Validators.required]],
-      // THE FIX #1: Initialize name and phoneNumber without validators.
+      // Initialize name and phoneNumber without validators.
       // They are not required in the initial 'ADD_EXISTING' view.
       name: [''],
       phoneNumber: [''],
@@ -40,7 +40,6 @@ export class AddUserModalComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // This logic is already correct and does not need to change.
     if (this.currentView === 'ADD_EXISTING') {
       if (
         this.addUserForm.get('email')?.invalid ||
@@ -106,7 +105,7 @@ export class AddUserModalComponent implements OnInit {
   }
 
   confirmAndProceedToCreate(): void {
-    // THE FIX #2: When switching views, dynamically add the required validators.
+    //When switching views, dynamically add the required validators.
     const nameControl = this.addUserForm.get('name');
     const phoneControl = this.addUserForm.get('phoneNumber');
 
@@ -115,8 +114,6 @@ export class AddUserModalComponent implements OnInit {
       Validators.required,
       Validators.minLength(10),
     ]);
-
-    // Update the validity of the controls to apply the new validators.
     nameControl?.updateValueAndValidity();
     phoneControl?.updateValueAndValidity();
 

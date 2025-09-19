@@ -11,7 +11,6 @@ export class TokenService {
 
   constructor() {}
 
-  // --- Token Methods ---
   saveTokens(accessToken: string, refreshToken: string): void {
     localStorage.setItem(this.ACCESS_TOKEN_KEY, accessToken);
     localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
@@ -30,7 +29,6 @@ export class TokenService {
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
   }
 
-  // --- User Methods ---
   saveUser(user: User): void {
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
   }
@@ -44,7 +42,6 @@ export class TokenService {
     localStorage.removeItem(this.USER_KEY);
   }
 
-  // --- Global Clear ---
   clearAll(): void {
     this.clearTokens();
     this.clearUser();

@@ -6,7 +6,6 @@ import { WorkspaceDetailComponent } from './pages/workspace-detail/workspace-det
 
 const routes: Routes = [
   {
-    // The main page at '/workspace' will show the list
     path: 'my',
     component: WorkspaceListComponent,
   },
@@ -15,12 +14,10 @@ const routes: Routes = [
     component: WorkspaceListComponent,
   },
   {
-    // The page for adding a new workspace
     path: 'create',
     component: CreateWorkspaceComponent,
   },
   {
-    // The new detail route with a dynamic ':id' parameter
     path: ':id',
     component: WorkspaceDetailComponent,
   },

@@ -10,7 +10,7 @@ import {
 
 export interface WorkspaceDetailResponse {
   workspace: Workspace;
-  users: WorkspaceOwner[]; // Users list will have the same shape as the owner
+  users: WorkspaceOwner[];
 }
 @Injectable({
   providedIn: 'root',
@@ -29,29 +29,27 @@ export class WorkspaceService {
       .set('limit', limit.toString())
       .set('order', order);
 
-    const data = this.http.get<PaginatedResponse<Workspace>>(`${this.apiUrl}/my`, {
-      params,
-    });
-    console.log(data.subscribe((res) => res));
+    const data = this.http.get<PaginatedResponse<Workspace>>(
+      `${this.apiUrl}/my`,
+      {
+        params,
+      }
+    );
     return data;
   }
-  
+
   getAllWorkspaces(
     page: number,
     limit: number,
     order: string
   ): Observable<PaginatedResponse<Workspace>> {
-    // Start with pagination parameters
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
 
-    // Add the single 'order' parameter for sorting by name
     if (order) {
       params = params.set('order', order);
     }
-    console.log('Fetching all workspaces with params:', params.toString());
-    console.log(`GET ${this.apiUrl}/all?${params.toString()}`);
     return this.http.get<PaginatedResponse<Workspace>>(`${this.apiUrl}/all`, {
       params,
     });

@@ -15,7 +15,6 @@ import { RouterModule } from '@angular/router';
   ],
   imports: [CommonModule, RouterModule],
   exports: [
-    // We only need to export the top-level layout components
     AuthLayoutComponent,
     MainLayoutComponent,
   ],

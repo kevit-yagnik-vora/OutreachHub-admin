@@ -12,7 +12,6 @@ export class AppComponent {
   isLoggedIn$: Observable<boolean>;
 
   constructor(private authService: AuthService) {
-    // Expose the isLoggedIn observable to the template
     this.isLoggedIn$ = this.authService.isLoggedIn$;
   }
 

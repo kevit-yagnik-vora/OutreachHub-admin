@@ -33,14 +33,12 @@ export class CreateWorkspaceComponent implements OnInit {
     });
   }
 
-  // Helper for easy access to form controls in the template
   get formControls() {
     return this.workspaceForm.controls;
   }
 
   onSubmit(): void {
     if (this.workspaceForm.invalid) {
-      // Mark all fields as touched to display validation errors
       this.workspaceForm.markAllAsTouched();
       return;
     }
@@ -50,7 +48,6 @@ export class CreateWorkspaceComponent implements OnInit {
 
     this.workspaceService.createWorkspace(this.workspaceForm.value).subscribe({
       next: (response) => {
-        console.log('Workspace created successfully!', response);
         // On success, navigate back to the workspace list
         this.router.navigate(['/workspace/my']);
       },

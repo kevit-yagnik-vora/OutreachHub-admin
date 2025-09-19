@@ -9,7 +9,7 @@ import { WorkspaceService } from '../../workspace.service';
   styleUrls: ['./edit-workspace-modal.component.scss'],
 })
 export class EditWorkspaceModalComponent implements OnInit {
-  @Input() workspace!: Workspace; // Receive the full workspace object from the parent
+  @Input() workspace!: Workspace;
   @Output() closeModal = new EventEmitter<void>();
   @Output() notification = new EventEmitter<{
     message: string;
@@ -51,7 +51,7 @@ export class EditWorkspaceModalComponent implements OnInit {
             message: 'Workspace updated successfully.',
             type: 'success',
           });
-          this.closeModal.emit(); // This will trigger the parent to refresh
+          this.closeModal.emit();
         },
         error: (err) => {
           this.error = err.error.message || 'Failed to update workspace.';

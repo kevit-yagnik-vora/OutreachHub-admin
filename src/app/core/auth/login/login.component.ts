@@ -32,8 +32,6 @@ export class LoginComponent {
 
     this.authService.login(this.loginForm.value).subscribe({
       next: (user) => {
-        console.log('Login successful! User:', user);
-        // Redirection is handled by the service.
         this.router.navigate(['']);
       this.isSubmitting = false;
       },
