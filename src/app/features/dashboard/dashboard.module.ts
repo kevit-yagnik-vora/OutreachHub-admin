@@ -6,7 +6,7 @@ import { DashboardComponent } from './dashboard.component';
 import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
-  declarations: [DashboardComponent],
-  imports: [CommonModule, DashboardRoutingModule, NgChartsModule],
+  declarations: [],
+  imports: [CommonModule, DashboardRoutingModule, NgChartsModule,DashboardComponent],
 })
 export class DashboardModule {}
